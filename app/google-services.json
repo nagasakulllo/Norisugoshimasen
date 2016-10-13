@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "353621568195",
+    "firebase_url": "https://norisugoshimasen.firebaseio.com",
+    "project_id": "norisugoshimasen",
+    "storage_bucket": "norisugoshimasen.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353621568195:android:ca8edf7e94cc4b68",
+        "android_client_info": {
+          "package_name": "com.norisugosimasen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353621568195-r6v1n5hs5944nsdbn14f70kq3lito107.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5exldqsF5EnDdnomu1Im2b0j8PygeJao"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
