@@ -1,8 +1,5 @@
 package com.norisugosimasen.model.stationdata;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum PrefectureKey implements DataInterface {
     HOKKAIDO("北海道"),
     AOMORI("青森"),

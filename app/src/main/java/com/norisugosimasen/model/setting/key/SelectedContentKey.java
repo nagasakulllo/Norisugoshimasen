@@ -1,7 +1,5 @@
 package com.norisugosimasen.model.setting.key;
 
-import com.norisugosimasen.model.setting.Setting;
-
 /**
  * Created by nagai on 2016/10/10.
  */

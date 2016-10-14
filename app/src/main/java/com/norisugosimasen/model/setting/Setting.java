@@ -2,13 +2,10 @@ package com.norisugosimasen.model.setting;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.norisugosimasen.model.setting.key.KeyInteface;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 /**

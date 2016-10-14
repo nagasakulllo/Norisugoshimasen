@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,9 +23,7 @@ import com.norisugosimasen.model.stationdata.Station;
 import com.norisugosimasen.model.stationdata.StationContent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by nagai on 2016/10/10.
@@ -34,7 +31,7 @@ import java.util.Map;
 
 public class GPSService extends Service {
     // メートル
-    private static final int REACHED_DISTANCE = 20000;
+    private static final int REACHED_DISTANCE = 500;
 
     private Context mContext;
     private List<Station> mStations;
