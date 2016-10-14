@@ -10,8 +10,8 @@ import java.util.List;
 public class StationContent {
     private PrefectureKey mPrefecture;
     private Route mRoute;
-    private List<Station> mStations;
-    private List<AdjacentStation> mAdjacentStations;
+    private List<Station> mRouteStations;
+    private List<AdjacentStation> mRouteAdjacentStations;
 
     private Station mTargetStation;
 
@@ -27,12 +27,12 @@ public class StationContent {
         return mRoute;
     }
 
-    public void setStations(List<Station> stations) {
-        mStations = stations;
+    public void setRouteStations(List<Station> stations) {
+        mRouteStations = stations;
     }
 
-    public void setAdjacentStations(List<AdjacentStation> adjacentStations) {
-        mAdjacentStations = adjacentStations;
+    public void setRouteAdjacentStations(List<AdjacentStation> adjacentStations) {
+        mRouteAdjacentStations = adjacentStations;
     }
 
     public void setTargetStation(Station targetStation) {
@@ -44,10 +44,10 @@ public class StationContent {
     }
 
     public List<Station> getAdjacentStations() {
-        if (mAdjacentStations == null || mTargetStation == null) return null;
+        if (mRouteAdjacentStations == null || mRouteStations == null || mTargetStation == null) return null;
 
         List<Station> stations = new ArrayList<>();
-        for (AdjacentStation adjacentStation : mAdjacentStations) {
+        for (AdjacentStation adjacentStation : mRouteAdjacentStations) {
             Station station = null;
             if (mTargetStation.getCode() == adjacentStation.getCode1()) {
                 station = getStationFromCode(adjacentStation.getCode2());
@@ -64,9 +64,7 @@ public class StationContent {
     }
 
     private Station getStationFromCode(int code) {
-        if (mStations == null) return null;
-
-        for (Station station : mStations) {
+        for (Station station : mRouteStations) {
             if (code == station.getCode()) {
                 return station;
             }

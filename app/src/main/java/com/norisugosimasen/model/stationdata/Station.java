@@ -17,10 +17,14 @@ public class Station implements DataInterface {
 
     public static List<Station>create(JSONObject json) {
         List<Station> list = new ArrayList<>();
+        if (json == null) return list;
+
         try {
             JSONArray array = json.getJSONArray("station_l");
-            for (int i = 0; i < array.length(); i++) {
-                list.add(new Station(array.getJSONObject(i)));
+            if (array != null) {
+                for (int i = 0; i < array.length(); i++) {
+                    list.add(new Station(array.getJSONObject(i)));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

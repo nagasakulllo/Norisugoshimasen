@@ -19,10 +19,14 @@ public class AdjacentStation {
 
     public static List<AdjacentStation>create(JSONObject json) {
         List<AdjacentStation> list = new ArrayList<>();
+        if (json == null) return list;
+
         try {
             JSONArray array = json.getJSONArray("station_join");
-            for (int i = 0; i < array.length(); i++) {
-                list.add(new AdjacentStation(array.getJSONObject(i)));
+            if (array != null) {
+                for (int i = 0; i < array.length(); i++) {
+                    list.add(new AdjacentStation(array.getJSONObject(i)));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -13,10 +13,14 @@ public class Route implements DataInterface {
 
     public static List<Route>create(JSONObject json) {
         List<Route> list = new ArrayList<>();
+        if (json == null) return list;
+
         try {
             JSONArray array = json.getJSONArray("line");
-            for (int i = 0; i < array.length(); i++) {
-                list.add(new Route(array.getJSONObject(i)));
+            if (array != null) {
+                for (int i = 0; i < array.length(); i++) {
+                    list.add(new Route(array.getJSONObject(i)));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

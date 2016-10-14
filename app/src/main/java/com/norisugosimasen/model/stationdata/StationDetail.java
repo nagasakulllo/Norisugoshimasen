@@ -20,10 +20,14 @@ public class StationDetail {
 
     public static List<StationDetail>create(JSONObject json) {
         List<StationDetail> list = new ArrayList<>();
+        if (json == null) return list;
+
         try {
             JSONArray array = json.getJSONArray("station");
-            for (int i = 0; i < array.length(); i++) {
-                list.add(new StationDetail(array.getJSONObject(i)));
+            if (array != null) {
+                for (int i = 0; i < array.length(); i++) {
+                    list.add(new StationDetail(array.getJSONObject(i)));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

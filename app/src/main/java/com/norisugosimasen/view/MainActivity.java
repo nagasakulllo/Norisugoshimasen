@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // パーミッションチェック
+        checkAllowPermissions();
+
         mStationContent = ((MyApplication) getApplication()).getStationContent();
 
         setPrefecturesSpinner();
@@ -75,11 +78,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (!isConnectedNetwork()) {
-            Toast toast = Toast.makeText(this, "ネットワークに接続してください", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, "駅情報を取得するには端末をネットワークに接続してください", Toast.LENGTH_LONG);
             toast.show();
         }
-
-        checkPermission();
     }
 
     @Override
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         return info != null && info.isConnected();
     }
 
-    private void checkPermission() {
+    private void checkAllowPermissions() {
         // 6.0未満は何もしない
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
 
@@ -129,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        return;
     }
 
     // 都道府県スピナーのセット
@@ -175,7 +178,9 @@ public class MainActivity extends AppCompatActivity {
                 mRouteSpinnerAdapter.setItem(APIWrapper.getRouteData(selected, MainActivity.this));
                 updateRouteSelection(0);
 
-                mStationSpinnerAdapter.setItem(APIWrapper.getStationData( (Route) mRouteSpinner.getSelectedItem(), MainActivity.this));
+                List<Station> stations = APIWrapper.getStationData((Route) mRouteSpinner.getSelectedItem(), MainActivity.this);
+                mStationSpinnerAdapter.setItem(stations);
+                mStationContent.setRouteStations(stations);
                 updateStationSelection(0);
             }
 
@@ -244,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
         mStationSpinnerAdapter = new SpinnerAdapter<>(this);
 
         List<Station> stations = APIWrapper.getStationData(route, this);
-        mStationContent.setStations(stations);
+        mStationContent.setRouteStations(stations);
 
         mStationSpinnerAdapter.setItem(stations);
         mStationSpinner.setAdapter(mStationSpinnerAdapter);
@@ -302,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // 隣駅情報を取得する
                 Route route = mStationContent.getRoute();
-                mStationContent.setAdjacentStations(APIWrapper.getAdjacentStationData(route, MainActivity.this));
+                mStationContent.setRouteAdjacentStations(APIWrapper.getAdjacentStationData(route, MainActivity.this));
 
                 startActivity(new Intent(MainActivity.this, DestinationActivity.class));
             }
@@ -316,6 +321,8 @@ public class MainActivity extends AppCompatActivity {
         final PrefectureKey prefecture = (PrefectureKey) mPrefectureSpinner.getSelectedItem();
         final Route route = (Route) mRouteSpinner.getSelectedItem();
         final Station station = (Station) mStationSpinner.getSelectedItem();
+        // 保存しない
+        if (prefecture == null || route == null || station == null) return;
 
         setting.write(new HashMap<KeyInteface, Object>() {
             {

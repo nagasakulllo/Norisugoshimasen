@@ -23,7 +23,9 @@ import com.norisugosimasen.MyApplication;
 import com.norisugosimasen.model.stationdata.Station;
 import com.norisugosimasen.model.stationdata.StationContent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,20 +33,18 @@ import java.util.Map;
  */
 
 public class GPSService extends Service {
-    private static final int VALUE_TARGET = 1;
-    private static final int VALUE_ADJACENT = 2;
     // メートル
-    private static final int REACHED_DISTANCE = 500;
+    private static final int REACHED_DISTANCE = 20000;
 
     private Context mContext;
-    private Map<Station, Integer> mStations;
+    private List<Station> mStations;
     private FusedLocationProviderApi mLocationAPI;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private LocationListener mLocationListener;
 
     public GPSService() {
-        mStations = new HashMap<>();
+        mStations = new ArrayList<>();
     };
 
     @Nullable
@@ -60,10 +60,10 @@ public class GPSService extends Service {
         mContext = getApplicationContext();
         StationContent content = ((MyApplication) getApplication()).getStationContent();
         if (content != null) {
-            if (content.getTargetStation() != null) mStations.put(content.getTargetStation(), VALUE_TARGET);
+            if (content.getTargetStation() != null) mStations.add(content.getTargetStation());
             if (content.getAdjacentStations() != null) {
                 for (Station station : content.getAdjacentStations()) {
-                    mStations.put(station, VALUE_ADJACENT);
+                    mStations.add(station);
                 }
             }
         }
@@ -91,16 +91,7 @@ public class GPSService extends Service {
                                 Station station = arrivedNearestStation(location);
                                 if (station == null) return;
 
-                                Integer value = mStations.get(station);
-                                if (value.equals(VALUE_TARGET)) {
-                                    // 目的地に到着したらサービス終了
-                                    mLocationAPI.removeLocationUpdates(mGoogleApiClient, mLocationListener);
-
-                                    stopSelf();
-                                }
-
                                 sendBroadcast(station);
-
                                 // 到着した駅は消す
                                 mStations.remove(station);
                             }
@@ -133,9 +124,11 @@ public class GPSService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-
+        // サービス終了
+        mLocationAPI.removeLocationUpdates(mGoogleApiClient, mLocationListener);
         stopFusedLocation();
+
+        super.onDestroy();
     }
 
     private void startFusedLocation(){
@@ -151,39 +144,23 @@ public class GPSService extends Service {
     }
 
     private Station arrivedNearestStation(Location current) {
-//        Station nearestStation = null;
-//        float nearestDistance = REACHED_DISTANCE;
-//
-//        float[] results = new float[3];
-//        for (Station station : mStations.keySet()) {
-//            Location.distanceBetween(current.getLatitude(), current.getLongitude(), station.getLatitude(), station.getLongitude(), results);
-//
-//            // 500メートル以内なら到着したと判断する
-//            if (results[0] < REACHED_DISTANCE) {
-//                if (results[0] < nearestDistance) {
-//                    nearestDistance = results[0];
-//                    nearestStation = station;
-//                }
-//            }
-//        }
-//
-//        return nearestStation;
-        StationContent content = ((MyApplication) getApplication()).getStationContent();
-        for (Station station : mStations.keySet()) {
-            for (Station adjacent : content.getAdjacentStations()) {
-                if (station.getName().equals(adjacent.getName())) {
-                    return station;
+        Station nearestStation = null;
+        float nearestDistance = REACHED_DISTANCE;
+
+        float[] results = new float[3];
+        for (Station station : mStations) {
+            Location.distanceBetween(current.getLatitude(), current.getLongitude(), station.getLatitude(), station.getLongitude(), results);
+
+            // 500メートル以内なら到着したと判断する
+            if (results[0] < REACHED_DISTANCE) {
+                if (results[0] < nearestDistance) {
+                    nearestDistance = results[0];
+                    nearestStation = station;
                 }
             }
         }
 
-        for (Station station : mStations.keySet()) {
-            if (station.getName().equals(content.getTargetStation().getName())) {
-                return station;
-            }
-        }
-
-        return null;
+        return nearestStation;
     }
 
     private void sendBroadcast(Station station) {

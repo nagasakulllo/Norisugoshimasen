@@ -8,6 +8,7 @@ import com.norisugosimasen.model.util.NetworkUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,21 +19,29 @@ public class APIWrapper {
     private APIWrapper() {};
 
     public static List<Route> getRouteData(PrefectureKey prefecture, Context context) {
+        if (prefecture == null || context == null) return new ArrayList<>();
+
         JSONObject json = getJSON(String.format("http://www.ekidata.jp/api/p/%s.json", prefecture.getId()), context);
         return Route.create(json);
     }
 
     public static List<Station> getStationData(Route route, Context context) {
+        if (route == null || context == null) return new ArrayList<>();
+
         JSONObject json = getJSON(String.format("http://www.ekidata.jp/api/l/%s.json", route.getCode()), context);
         return Station.create(json);
     }
 
     public static List<StationDetail> getStationDetailData(Station station, Context context) {
+        if (station == null || context == null) return new ArrayList<>();
+
         JSONObject json = getJSON(String.format("http://www.ekidata.jp/api/s/%s.json", station.getCode()), context);
         return StationDetail.create(json);
     }
 
     public static List<AdjacentStation> getAdjacentStationData(Route route, Context context) {
+        if (route == null || context == null) return new ArrayList<>();
+
         JSONObject json = getJSON(String.format("http://www.ekidata.jp/api/n/%s.json", route.getCode()), context);
         return AdjacentStation.create(json);
     }
