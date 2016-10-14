@@ -59,7 +59,7 @@ public class DialogActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private static class MyDialogFragment extends DialogFragment {
+    public static class MyDialogFragment extends DialogFragment {
         enum DialogKey {
             MESSAGE,;
         }
